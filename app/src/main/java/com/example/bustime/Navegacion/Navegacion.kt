@@ -19,27 +19,40 @@ fun AppNavHost(navController: NavHostController) {
             PantallaInicio(navController)
         }
 
-                composable("pasajeros") {
-                    val pasajerosViewModel: PasajerosViewModel = hiltViewModel()
-                    PantallaPasajeros(navController, pasajerosViewModel)
-                }
+        composable("pasajeros") {
+            val pasajerosViewModel: PasajerosViewModel = hiltViewModel()
+            PantallaPasajeros(navController, pasajerosViewModel)
+        }
 
+        composable("agregar_pasajeros") {
+            val pasajerosViewModel: PasajerosViewModel = hiltViewModel()
+            val rutaViewModel: RutaViewModel = hiltViewModel()
+            AgregarPasajeroScreen(navController, pasajerosViewModel, rutaViewModel)
+        }
 
-                composable("agregar_pasajeros") {
-                    val pasajerosViewModel: PasajerosViewModel = hiltViewModel()
-                    val rutaViewModel: RutaViewModel = hiltViewModel() // ✅ Se agrega el RutaViewModel
-                    AgregarPasajeroScreen(navController, pasajerosViewModel, rutaViewModel)
-                }
+        composable(
+            "actualizar_pasajero/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getLong("id") ?: 0L
+            val pasajerosViewModel: PasajerosViewModel = hiltViewModel()
+            val rutaViewModel: RutaViewModel = hiltViewModel()
+            ActualizarPasajeroScreen(navController, id, pasajerosViewModel, rutaViewModel)
+        }
 
-                composable(
-                    "actualizar_pasajero/{id}",
-                    arguments = listOf(navArgument("id") { type = NavType.LongType })
-                ) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getLong("id") ?: 0L
-                    val pasajerosViewModel: PasajerosViewModel = hiltViewModel()
-                    val rutaViewModel: RutaViewModel = hiltViewModel() // ✅ Se agrega el RutaViewModel
-                    ActualizarPasajeroScreen(navController, id, pasajerosViewModel, rutaViewModel)
-                }
+        composable("listar_pasajeros") {
+            val pasajerosViewModel: PasajerosViewModel = hiltViewModel()
+            ListarPasajerosScreen(navController, pasajerosViewModel)
+        }
+
+        composable(
+            "eliminar_pasajero/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getLong("id") ?: 0L
+            val pasajerosViewModel: PasajerosViewModel = hiltViewModel()
+            EliminarPasajeroScreen(navController, id, pasajerosViewModel)
+        }
 
         composable("conductores") {
             val viewModel: ConductoresViewModel = viewModel()
