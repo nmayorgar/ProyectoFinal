@@ -6,22 +6,32 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.bustime.viewmodel.PasajeroViewModel
+import com.example.bustime.viewmodel.ConductoresViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EliminarPasajeroScreen(navController: NavHostController, pasajeroId: Long, pasajerosViewModel: PasajeroViewModel) {
+fun EliminarConductorScreen(
+    navController: NavHostController,
+    idConductor: Long,
+    conductoresViewModel: ConductoresViewModel
+) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Eliminar Pasajero") }) }
+        topBar = { TopAppBar(title = { Text("Eliminar Conductor") }) }
     ) { paddingValues ->
         Column(
-            modifier = Modifier.padding(paddingValues).padding(16.dp).fillMaxSize()
+            modifier = Modifier
+                .padding(paddingValues)
+                .padding(16.dp)
+                .fillMaxSize()
         ) {
-            Text("¿Seguro que deseas eliminar este pasajero?", style = MaterialTheme.typography.bodyLarge)
+            Text(
+                "¿Seguro que deseas eliminar este conductor?",
+                style = MaterialTheme.typography.bodyLarge
+            )
             Spacer(modifier = Modifier.height(16.dp))
             Row {
                 Button(onClick = {
-                    pasajerosViewModel.eliminarPasajero(pasajeroId)
+                    conductoresViewModel.eliminarConductor(idConductor)
                     navController.popBackStack()
                 }) {
                     Text("Eliminar")

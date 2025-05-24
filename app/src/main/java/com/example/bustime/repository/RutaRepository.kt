@@ -2,7 +2,6 @@ package com.example.bustime.repository
 
 import com.example.bustime.Model.Ruta
 import com.example.bustime.Interfaces.ApiService
-import com.example.bustime.Interfaces.RetrofitClient
 
 class RutaRepository(private val api: ApiService) {
 

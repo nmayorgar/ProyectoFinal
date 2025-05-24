@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bustime.Model.Conductor
 import com.example.bustime.repository.ConductorRepository
+import com.example.bustime.service.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import com.example.bustime.Interfaces.RetrofitClient // Importa RetrofitClient
+import kotlinx.coroutines.launch// Importa RetrofitClient
 
 class ConductoresViewModel : ViewModel() {
 
@@ -46,7 +46,7 @@ class ConductoresViewModel : ViewModel() {
     fun actualizarConductor(conductor: Conductor) {
         viewModelScope.launch {
             try {
-                repository.actualizarConductor(conductor.id_conductor.toLong(), conductor)
+                repository.actualizarConductor(conductor.id_conductor, conductor)
                 obtenerConductores()
             } catch (e: Exception) {
                 println("Error al actualizar conductor: ${e.message}")

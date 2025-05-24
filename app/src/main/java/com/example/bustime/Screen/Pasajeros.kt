@@ -15,11 +15,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.example.bustime.viewmodel.PasajerosViewModel
+import com.example.bustime.viewmodel.PasajeroViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PantallaPasajeros(navController: NavHostController, viewmodel: PasajerosViewModel) {
+fun PantallaPasajeros(navController: NavHostController, viewmodel: PasajeroViewModel) {
     val backgroundImageUrl = "https://drive.usercontent.google.com/u/0/uc?id=1USuyXxYOQbQQBsSmwr2Lpi0oN4rClBz7&export=download"
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -83,7 +83,7 @@ fun PantallaPasajeros(navController: NavHostController, viewmodel: PasajerosView
                     PasajeroOptionIcon(
                         imageUrl = "https://drive.usercontent.google.com/u/0/uc?id=1ZrPnuLdCBAgG3kze7HOnP6NfRmIUC98B&export=download",
                         label = "Actualizar Pasajero",
-                        onClick = { navController.navigate("actualizar_pasajero/{id}") }
+                        onClick = { navController.navigate("actualizar_pasajero/1") }
                     )
                     // Eliminar Pasajero
                     PasajeroOptionIcon(

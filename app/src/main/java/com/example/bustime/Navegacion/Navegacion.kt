@@ -9,10 +9,23 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.bustime.Screen.*
+import com.example.bustime.pantallas.conductores.ActualizarConductorScreen
+import com.example.bustime.pantallas.conductores.AgregarConductorScreen
+import com.example.bustime.pantallas.conductores.ListarConductoresScreen
+import com.example.bustime.pantallas.pasajeros.AgregarPasajero
+import com.example.bustime.pantallas.pasajeros.ListarPasajerosScreen
+import com.example.bustime.screen.ActualizarAutobusScreen
+import com.example.bustime.screen.AgregarAutobusScreen
+import com.example.bustime.screen.EliminarAutobusScreen
+import com.example.bustime.screen.ListarAutobusesScreen
 import com.example.bustime.viewmodel.*
+
 
 @Composable
 fun AppNavHost(navController: NavHostController) {
+    val pasajeroViewModel: PasajeroViewModel = hiltViewModel()
+    val rutaViewModel: RutaViewModel = hiltViewModel() // Instancia única compartida
+
     NavHost(navController = navController, startDestination = "inicio") {
 
         composable("inicio") {
@@ -20,14 +33,11 @@ fun AppNavHost(navController: NavHostController) {
         }
 
         composable("pasajeros") {
-            val pasajerosViewModel: PasajerosViewModel = hiltViewModel()
-            PantallaPasajeros(navController, pasajerosViewModel)
+            PantallaPasajeros(navController, pasajeroViewModel)
         }
 
         composable("agregar_pasajeros") {
-            val pasajerosViewModel: PasajerosViewModel = hiltViewModel()
-            val rutaViewModel: RutaViewModel = hiltViewModel()
-            AgregarPasajeroScreen(navController, pasajerosViewModel, rutaViewModel)
+            AgregarPasajero(navController, pasajeroViewModel, rutaViewModel)
         }
 
         composable(
@@ -35,14 +45,11 @@ fun AppNavHost(navController: NavHostController) {
             arguments = listOf(navArgument("id") { type = NavType.LongType })
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getLong("id") ?: 0L
-            val pasajerosViewModel: PasajerosViewModel = hiltViewModel()
-            val rutaViewModel: RutaViewModel = hiltViewModel()
-            ActualizarPasajeroScreen(navController, id, pasajerosViewModel, rutaViewModel)
+            ActualizarPasajeroScreen(navController, id, pasajeroViewModel, rutaViewModel)
         }
 
         composable("listar_pasajeros") {
-            val pasajerosViewModel: PasajerosViewModel = hiltViewModel()
-            ListarPasajerosScreen(navController, pasajerosViewModel)
+            ListarPasajerosScreen(navController, pasajeroViewModel)
         }
 
         composable(
@@ -50,21 +57,59 @@ fun AppNavHost(navController: NavHostController) {
             arguments = listOf(navArgument("id") { type = NavType.LongType })
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getLong("id") ?: 0L
-            val pasajerosViewModel: PasajerosViewModel = hiltViewModel()
-            EliminarPasajeroScreen(navController, id, pasajerosViewModel)
+            EliminarPasajeroScreen(navController, id, pasajeroViewModel)
         }
 
         composable("conductores") {
-            val viewModel: ConductoresViewModel = viewModel()
+            val viewModel: ConductoresViewModel = hiltViewModel()
             PantallaConductores(navController, viewModel)
         }
+        composable("agregar_conductor") {
+            val viewModel: ConductoresViewModel = hiltViewModel()
+            AgregarConductorScreen(navController, viewModel)
+        }
+
+
+        composable("actualizar_conductor") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toLongOrNull() ?: return@composable
+            val viewModel: ConductoresViewModel = hiltViewModel()
+            ActualizarConductorScreen(navController, idConductor = id, viewModel)
+        }
+
+        composable("eliminar_conductor") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toLongOrNull() ?: return@composable
+            val viewModel: ConductoresViewModel = hiltViewModel()
+            EliminarConductorScreen(navController, idConductor = id, viewModel)
+        }
+
+
+        composable("listar_conductores") {
+            val viewModel: ConductoresViewModel = hiltViewModel()
+            ListarConductoresScreen(navController, viewModel)
+        }
+
+        composable("listarAutobuses") {
+      //      ListarAutobusesScreen(navController, autobusViewModel)
+        }
+        composable("agregarAutobus") {
+      //      AgregarAutobusScreen(navController, autobusViewModel)
+        }
+        composable("actualizarAutobus/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
+            id?.let {
+      //          ActualizarAutobusScreen(navController, autobusViewModel, it)
+            }
+        }
+        composable("eliminarAutobus/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toLongOrNull()
+            id?.let {
+     //           EliminarAutobusScreen(navController, it, autobusViewModel)
+            }
+        }
+
 
         composable("pantalla_rutas") {
-            val viewModel: RutaViewModel = viewModel()
-            PantallaRuta(navController, viewModel)
+            PantallaRuta(navController, rutaViewModel)
         }
-            }
-
-        }
-
-
+    }
+}

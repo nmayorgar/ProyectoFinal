@@ -1,7 +1,7 @@
 package com.example.bustime.repository
 
 import com.example.bustime.Model.Horario
-import com.example.bustime.Interfaces.RetrofitClient
+import com.example.bustime.service.RetrofitClient
 
 class HorarioRepository {
 
@@ -13,8 +13,8 @@ class HorarioRepository {
         return RetrofitClient.apiService.obtenerHorario(id)
     }
 
-    suspend fun guardarHorario(id: Long) {
-        RetrofitClient.apiService.guardarHorario(id)
+    suspend fun guardarHorario(horario: Horario): Horario {
+        return RetrofitClient.apiService.guardarHorario(horario)
     }
 
     suspend fun eliminarHorario(id: Long) {

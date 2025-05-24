@@ -1,53 +1,29 @@
 package com.example.bustime.repository
 
 import com.example.bustime.Interfaces.ApiService
+import com.example.bustime.service.RetrofitClient
 import com.example.bustime.Model.Pasajeros
-import javax.inject.Inject // ✅ Importa la anotación
+import com.example.bustime.service.RetrofitClient.apiService
+import javax.inject.Inject
+import retrofit2.Response
 
-class PasajerosRepository @Inject constructor(private val api: ApiService) { // ✅ Agregado @Inject
 
-    suspend fun obtenerPasajeros(): List<Pasajeros> {
-        return try {
-            api.obtenerPasajeros()
-        } catch (e: Exception) {
-            println("Error al obtener pasajeros: ${e.message}")
-            emptyList()
-        }
+class PasajeroRepository @Inject constructor(
+    private val api: ApiService // Reemplaza con el nombre real de tu interfaz
+) {
+
+    suspend fun obtenerPasajeros(): List<Pasajeros> = api.obtenerPasajeros()
+
+    suspend fun obtenerPasajeroPorId(id: Long): Pasajeros = api.obtenerPasajero(id)
+
+    suspend fun guardarPasajero(pasajero: Pasajeros): Pasajeros = api.guardarPasajero(pasajero)
+
+    suspend fun actualizarPasajero(id: Long, pasajero: Pasajeros): Pasajeros {
+        return apiService.actualizarPasajero(id, pasajero)
     }
 
-    suspend fun obtenerPasajeroPorId(id: Long): Pasajeros? {
-        return try {
-            api.obtenerPasajero(id)
-        } catch (e: Exception) {
-            println("Error al obtener pasajero por ID: ${e.message}")
-            null
-        }
+    suspend fun eliminarPasajero(id: Long): Response<Unit> {
+        return apiService.eliminarPasajero(id)
     }
 
-    suspend fun guardarPasajero(pasajero: Pasajeros) {
-        try {
-            api.guardarPasajero(pasajero)
-            println("Pasajero guardado correctamente")
-        } catch (e: Exception) {
-            println("Error al guardar pasajero: ${e.message}")
-        }
-    }
-
-    suspend fun actualizarPasajero(pasajero: Pasajeros) {
-        try {
-            api.actualizarPasajero(pasajero.id_pasajero, pasajero) // Se usa id_pasajero del objeto
-            println("Pasajero actualizado correctamente")
-        } catch (e: Exception) {
-            println("Error al actualizar pasajero: ${e.message}")
-        }
-    }
-
-    suspend fun eliminarPasajero(id: Long) {
-        try {
-            api.eliminarPasajero(id)
-            println("Pasajero eliminado correctamente")
-        } catch (e: Exception) {
-            println("Error al eliminar pasajero: ${e.message}")
-        }
-    }
 }

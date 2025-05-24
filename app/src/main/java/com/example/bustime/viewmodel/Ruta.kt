@@ -1,11 +1,12 @@
 package com.example.bustime.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bustime.Interfaces.RetrofitClient
 import com.example.bustime.Model.Pasajeros
 import com.example.bustime.Model.Ruta
 import com.example.bustime.repository.RutaRepository
+import com.example.bustime.service.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -31,7 +32,16 @@ class RutaViewModel : ViewModel() {
             }
         }
     }
-
+    fun cargarRutas() {
+        viewModelScope.launch {
+            try {
+                val rutas = repository.obtenerRutas()
+                _listaRutas.value = rutas
+            } catch (e: Exception) {
+                Log.e("RutaViewModel", "Error al cargar rutas: ${e.message}")
+            }
+        }
+    }
     fun guardarRuta(ruta: Ruta) {
         viewModelScope.launch {
             try {
@@ -46,7 +56,7 @@ class RutaViewModel : ViewModel() {
     fun actualizarRuta(ruta: Ruta) {
         viewModelScope.launch {
             try {
-                repository.actualizarRuta(ruta.id_ruta, ruta) // Usa id_ruta del objeto correctamente
+                ruta.id_ruta?.let { repository.actualizarRuta(it, ruta) } // Usa id_ruta del objeto correctamente
                 obtenerRutas()
             } catch (e: Exception) {
                 println("Error al actualizar ruta: ${e.message}")

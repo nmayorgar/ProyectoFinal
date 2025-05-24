@@ -1,4 +1,4 @@
-package com.example.bustime.Screen
+package com.example.bustime.pantallas.pasajeros
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,37 +8,63 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import com.example.bustime.Model.Pasajeros
-import com.example.bustime.viewmodel.PasajerosViewModel
+import androidx.navigation.NavController
+import com.example.bustime.viewmodel.PasajeroViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListarPasajerosScreen(navController: NavHostController, pasajerosViewModel: PasajerosViewModel) {
-    val pasajeros by pasajerosViewModel.listaPasajeros.collectAsState()
+fun ListarPasajerosScreen(
+    navController: NavController,
+    pasajeroViewModel: PasajeroViewModel
+) {
+    val pasajeros by pasajeroViewModel.listaPasajeros.collectAsState()
 
     LaunchedEffect(Unit) {
-        pasajerosViewModel.cargarPasajeros()
+        pasajeroViewModel.cargarPasajeros()
     }
 
-    Scaffold(
-        topBar = { TopAppBar(title = { Text("Lista de Pasajeros") }) }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier.padding(paddingValues).padding(16.dp).fillMaxSize()
-        ) {
-            LazyColumn {
-                items(pasajeros) { pasajero ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { navController.navigate("actualizar_pasajero/${pasajero.id_pasajero}") }
-                            .padding(16.dp)
-                    ) {
-                        Text(text = pasajero.nombre, style = MaterialTheme.typography.bodyLarge)
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Button(onClick = { navController.navigate("eliminar_pasajero/${pasajero.id_pasajero}") }) {
-                            Text("Eliminar")
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)
+    ) {
+        Text(
+            text = "Lista de Pasajeros",
+            style = MaterialTheme.typography.titleLarge
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        LazyColumn {
+            items(pasajeros) { pasajero ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text("Nombre: ${pasajero.nombre}")
+                        Text("Correo: ${pasajero.correo}")
+                        Text("Teléfono: ${pasajero.telefono}")
+                        pasajero.rutas?.let {
+                            Text("Ruta: ${it.origen} - ${it.destino}")
+                        }
+
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                            Button(onClick = {
+                                navController.navigate("actualizar_pasajero/${pasajero.id_pasajero}")
+                            }) {
+                                Text("Editar")
+                            }
+                            Button(
+                                onClick = {
+                                    pasajero.id_pasajero?.let {
+                                        pasajeroViewModel.eliminarPasajero(it)
+                                    }
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                            ) {
+                                Text("Eliminar")
+                            }
                         }
                     }
                 }
